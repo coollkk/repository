@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倉庫管理</title>
+    <style>
+        #demo{
+            background-color: #95afc0;
+            height: 100vh;
+            margin: 0;
+            padding:0;
+        }
+    </style>
+</head>
+<body>
+    <div id="demo">
+        <h2>搜尋物品</h2>
+        <input type="text" v-model='searchName'>
+        <ul>
+            <li v-for='item in filteritems'>
+               {{item}}
+            </li>
+        </ul>
+
+        <input type="text" v-model="others">添加物品
+        <h2>A01庫位</h2>
+        <input type="text" v-model='moveitem'>要移動的東西
+        <input type="text" v-model= 'target'> 要移到的位置<button @click= 'move(A01)'>移動</button><br>
+         <button @click='addT(A01)'>新增</button><br>
+         <ul>
+             <li v-for='(A01item,index) in A01' :key='index'>{{A01item}}</li>
+         </ul>
+        <h2>A02庫位</h2>
+        <input type="text" v-model='moveitem'>要移動的東西
+        <input type="text" v-model= 'target'> 要移到的位置<button @click= 'move(A02)'>移動</button><br>
+        <button @click='addT(A02)'>新增</button><br>
+        <ul>
+            <li v-for='(A02item,index) in A02' :key='index'>{{A02item}}</li>
+        </ul>
+    </div>
+
+    <script src="/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#demo',
+            data:{
+                A01:[],
+                A02:[],
+                others:'',
+                target: '',
+                moveitem: '',
+                searchName: '',
+            },
+            computed:{
+                filteritems:function(){
+                    const {searchName,A01,A02}=this
+                    const items = [A01,A02]
+                    const arr = []
+                    if (searchName) {
+                        for(let i = 0; i<items.length; i++){
+                            arr[i] = items[i].filter(value => value.indexOf(searchName)!== -1)
+                        } return arr
+                        }
+                    }
+            },
+            methods: {
+                addT(y){
+                    if(this.others!==''){
+                        y.push(this.others)
+                        this.others = ''
+                    }
+                },
+                move(x){
+                    if(x.indexOf(this.moveitem)!==-1){
+                  x.pop(this.moveitem)
+                  if(this.target=='A02'){
+                      this.A02.push(this.moveitem)
+                      alert('移動成功')
+                      this.moveitem= ''
+                      this.target= ''
+                  }else if(this.target=='A01'){
+                      this.A01.push(this.moveitem)
+                      alert('移動成功')
+                      this.moveitem = ''
+                      this.target = ''
+                  }
+                }else{return alert('此庫位無該東西')}
+                }
+            }
+        })
+    </script>
+</body>
+</html>
